@@ -1104,7 +1104,11 @@ canvas#anomalyMap {
 <div class="toast" id="toast"></div>
 
 <script>
-const API = 'http://localhost:5000';
+// Auto-detect API URL: use relative path in production, localhost in dev
+const API = window.location.hostname === 'localhost' || 
+            window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:5000'
+  : '';
 
 // ── Framework colours ──────────────────────────────────────
 const FW_COLORS = {
