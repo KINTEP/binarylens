@@ -1,14 +1,20 @@
 """
-BinaryLens API Server v1.2
+BinaryLens API Server v1.3
 ==========================
 Run:  python server.py
-Then open http://localhost:5000 in your browser.
+Open: http://localhost:5000
 
 Requirements:
-    pip install flask flask-cors numpy
+    pip install flask flask-cors numpy gunicorn
+
+Changes in v1.3:
+    - Lazy model loading (fixes OOM on 512MB free tier)
+    - Only loads consensus.pkl + 4grams on startup (~50MB)
+    - Full models loaded on-demand only (for corpus/add)
+    - Single gunicorn worker to minimise RAM
 """
 
-import os, sys, struct, pickle, hashlib, json
+import os, struct, pickle, hashlib, json
 import math, time
 from pathlib import Path
 from collections import defaultdict, Counter
@@ -20,8 +26,7 @@ from flask_cors import CORS
 app = Flask(__name__, static_folder='.')
 CORS(app)
 
-# ── Framework signatures (recalibrated from 46-binary corpus) ──
-# Accuracy: 45/46 (98%) — edge case: CCleaner (packed NSIS)
+# ── Framework signatures ──────────────────────────────────────
 SIGS = {
     'MSVC / CRT':           (-1.747, 0.150),
     'InnoSetup / MSVC':     (-1.849, 0.150),
@@ -34,7 +39,6 @@ SIGS = {
     'MSVC / CRT x64':       (-6.157, 0.080),
 }
 
-# Section hints for UI display only (not used in classification)
 SECTION_HINTS = {
     'CPADinfo': 'Chrome packer',
     '.wixburn': 'WiX installer',
@@ -48,81 +52,32 @@ SECTION_HINTS = {
 
 
 def classify_binary(lp, sections, fn_count=0, sigs=None):
-    """
-    Three-signal classifier: sections + logP + function count.
-    Calibrated on 46-binary corpus. Accuracy: 45/46 (98%).
-
-    Stage 1: Unique section fingerprints (deterministic)
-    Stage 2: NSIS variants via .ndata + function count
-    Stage 3: Function count for ambiguous layouts
-    Stage 4: logP nearest-neighbour fallback
-
-    Rules:
-      CPADinfo                     -> Packed / Encrypted
-      .wixburn                     -> WiX Bootstrapper
-      .gfids                       -> Driver / CFG binary
-      .pdata                       -> MSVC / CRT x64
-      .itext + .didata (no .reloc) -> MSVC / CRT
-      .itext (other)               -> InnoSetup / MSVC
-      .ndata + fn=0                -> NSIS Compressed
-      .ndata + fn>0                -> NSIS Installer
-      fn>=100 + no specials        -> Custom Bootstrapper
-      fn<100 + minimal secs        -> WiX Bootstrapper
-      logP < -7.5 (no .gfids)      -> Packed / Encrypted
-      fallback                     -> logP nearest-neighbour
-    """
     if sigs is None:
         sigs = SIGS
     sec_set = set(sections)
 
-    # ── Stage 1: Unique section fingerprints ─────────────────
-    if 'CPADinfo' in sec_set:
-        return 'Packed / Encrypted'
+    if 'CPADinfo' in sec_set:  return 'Packed / Encrypted'
+    if '.wixburn' in sec_set:  return 'WiX Bootstrapper'
+    if '.gfids'   in sec_set:  return 'Driver / CFG binary'
+    if '.pdata'   in sec_set:  return 'MSVC / CRT x64'
 
-    if '.wixburn' in sec_set:
-        return 'WiX Bootstrapper'
-
-    if '.gfids' in sec_set:
-        return 'Driver / CFG binary'
-
-    # x64 binary — .pdata is x64 exception handler table
-    if '.pdata' in sec_set:
-        return 'MSVC / CRT x64'
-
-    # InnoSetup vs MSVC — both use .itext
-    # MSVC (R, VSCode):    .itext + .didata, NO .reloc
-    # InnoSetup (Git):     .itext + .didata + .reloc
-    # InnoSetup (Sublime): .itext, no .didata
     if '.itext' in sec_set:
         if '.didata' in sec_set and '.reloc' not in sec_set:
             return 'MSVC / CRT'
         return 'InnoSetup / MSVC'
 
-    # ── Stage 2: NSIS variants (.ndata present) ───────────────
     if '.ndata' in sec_set:
-        # Compressed NSIS: fn=0 (VLC, android studio)
-        if fn_count == 0:
-            return 'NSIS Compressed'
-        # Regular NSIS: fn>0
-        return 'NSIS Installer'
+        return 'NSIS Compressed' if fn_count == 0 else 'NSIS Installer'
 
-    # ── Stage 3: Function count for ambiguous layouts ─────────
-    # Custom Bootstrapper: fn>=100, no special sections
-    # (Zoom, Opera, Brave, Malwarebytes)
     if fn_count >= 100:
         return 'Custom Bootstrapper'
 
-    # WiX minimal layout: fn<100, no .ndata/.itext
-    # (7-zip uses WiX with fn=55)
-    if fn_count > 0 and fn_count < 100:
+    if 0 < fn_count < 100:
         minimal = {'.text', '.rdata', '.data',
                    '.rsrc', '.reloc', '.tls', '.bss'}
         if sec_set <= minimal:
             return 'WiX Bootstrapper'
 
-    # ── Stage 4: logP nearest-neighbour fallback ──────────────
-    # Special case: logP below -7.5 with no driver sections
-    # = self-extractor or heavily packed (Firefox, custom packers)
     if lp < -7.5 and '.gfids' not in sec_set:
         return 'Packed / Encrypted'
 
@@ -133,21 +88,20 @@ def classify_binary(lp, sections, fn_count=0, sigs=None):
             best_d = d
             best   = fw
 
-    # Safety: Driver predicted but no .gfids -> Packed
     if best == 'Driver / CFG binary' and '.gfids' not in sec_set:
         best = 'Packed / Encrypted'
 
     return best
 
 
-# ── CorpusDB ──────────────────────────────────────────────────
+# ── CorpusDB (lazy loading) ───────────────────────────────────
 
 class CorpusDB:
     def __init__(self, path='corpus'):
         self.path      = Path(path)
         self.index     = {}
-        self.models    = {}
-        self.fg        = {}
+        self.models    = {}   # loaded on-demand only
+        self.fg        = {}   # loaded at startup (small)
         self.consensus = None
         self._load()
 
@@ -155,12 +109,41 @@ class CorpusDB:
         self.path.mkdir(exist_ok=True)
         (self.path / 'models').mkdir(exist_ok=True)
         (self.path / '4grams').mkdir(exist_ok=True)
+
         idx = self.path / 'index.json'
         if idx.exists():
             self.index = json.loads(idx.read_text())
+            print(f"  Index: {len(self.index)} binaries")
+
         con = self.path / 'consensus.pkl'
         if con.exists():
             self.consensus = pickle.loads(con.read_bytes())
+            ctx = len(self.consensus['p3'])
+            print(f"  Consensus: {ctx} contexts")
+
+    def load_4grams_only(self):
+        """Load only 4gram sets — small, needed for similarity."""
+        loaded = 0
+        for sha in self.index:
+            fp = self.path / '4grams' / f'{sha}.pkl'
+            if fp.exists() and sha not in self.fg:
+                try:
+                    self.fg[sha] = pickle.loads(fp.read_bytes())
+                    loaded += 1
+                except Exception:
+                    pass
+        print(f"  4grams: {loaded} loaded")
+        return loaded
+
+    def load_model(self, sha):
+        """Load a single model on demand."""
+        if sha in self.models:
+            return self.models[sha]
+        mp = self.path / 'models' / f'{sha}.pkl'
+        if mp.exists():
+            self.models[sha] = pickle.loads(mp.read_bytes())
+            return self.models[sha]
+        return None
 
     def save(self):
         (self.path / 'index.json').write_text(
@@ -168,15 +151,6 @@ class CorpusDB:
         if self.consensus:
             (self.path / 'consensus.pkl').write_bytes(
                 pickle.dumps(self.consensus))
-
-    def load_all(self):
-        for sha in self.index:
-            mp = self.path / 'models' / f'{sha}.pkl'
-            fp = self.path / '4grams' / f'{sha}.pkl'
-            if mp.exists() and sha not in self.models:
-                self.models[sha] = pickle.loads(mp.read_bytes())
-            if fp.exists() and sha not in self.fg:
-                self.fg[sha] = pickle.loads(fp.read_bytes())
 
     def contains(self, sha):
         return sha in self.index
@@ -191,6 +165,7 @@ class CorpusDB:
             pickle.dumps(fg))
 
     def rebuild_consensus(self, exclude_fw=None):
+        """Rebuild consensus — loads models on demand."""
         if exclude_fw is None:
             exclude_fw = {'Packed / Encrypted',
                           'Driver / CFG binary',
@@ -199,16 +174,8 @@ class CorpusDB:
         for sha, meta in self.index.items():
             fw   = meta.get('label') or meta.get('framework', '?')
             arch = meta.get('arch', 'x86')
-            if fw in exclude_fw:
+            if fw in exclude_fw or arch != 'x86':
                 continue
-            if arch != 'x86':
-                continue
-            if sha not in self.models:
-                mp = self.path / 'models' / f'{sha}.pkl'
-                if mp.exists():
-                    self.models[sha] = pickle.loads(mp.read_bytes())
-                else:
-                    continue
             fw_groups[fw].append(sha)
 
         if not fw_groups:
@@ -223,7 +190,9 @@ class CorpusDB:
             fw_w  = 1.0 / total_w
             bin_w = fw_w / len(shas)
             for sha in shas:
-                m = self.models[sha]
+                m = self.load_model(sha)
+                if not m:
+                    continue
                 for ctx, d in m['p3'].items():
                     for b, p in d.items():
                         c3[ctx][b] += p * bin_w
@@ -235,47 +204,40 @@ class CorpusDB:
                         c1[ctx][b] += p * bin_w
 
         def norm(c):
-            return {
-                ctx: {k: v / sum(d.values())
-                      for k, v in d.items()}
-                for ctx, d in c.items()
-            }
+            return {ctx: {k: v / sum(d.values())
+                          for k, v in d.items()}
+                    for ctx, d in c.items()}
 
         self.consensus = {
             'p3': norm(c3),
             'p2': norm(c2),
             'p1': norm(c1),
         }
+        # Free model RAM after rebuild
+        self.models.clear()
         return self.consensus
 
 
 # ── Analysis helpers ──────────────────────────────────────────
 
-def build_models(data, order=3):
+def build_models(data):
     def build(n):
         counts = defaultdict(Counter)
         for i in range(len(data) - n):
             ctx = ",".join(map(str, data[i:i+n]))
             counts[ctx][data[i+n]] += 1
-        return {
-            ctx: {k: v / sum(c.values())
-                  for k, v in c.items()}
-            for ctx, c in counts.items()
-        }
+        return {ctx: {k: v / sum(c.values()) for k, v in c.items()}
+                for ctx, c in counts.items()}
     p1r = defaultdict(Counter)
     for i in range(len(data) - 1):
         p1r[data[i]][data[i+1]] += 1
-    p1 = {
-        b: {k: v / sum(c.values()) for k, v in c.items()}
-        for b, c in p1r.items()
-    }
+    p1 = {b: {k: v / sum(c.values()) for k, v in c.items()}
+          for b, c in p1r.items()}
     return {'p3': build(3), 'p2': build(2), 'p1': p1}
 
 
 def build_4grams(data):
-    return set(
-        tuple(data[i:i+4]) for i in range(len(data) - 3)
-    )
+    return set(tuple(data[i:i+4]) for i in range(len(data) - 3))
 
 
 def score_logp(block, c3, c2, c1):
@@ -294,8 +256,6 @@ def score_logp(block, c3, c2, c1):
 
 
 def parse_pe(raw):
-    """Parse PE header. Falls back to largest executable section
-    if .text is absent (handles Firefox, self-extractors)."""
     try:
         if raw[:2] != b'MZ':
             return None
@@ -307,41 +267,28 @@ def parse_pe(raw):
         optsz   = struct.unpack_from('<H', raw, pe_off+20)[0]
         magic   = struct.unpack_from('<H', raw, pe_off+24)[0]
         sec_off = pe_off + 24 + optsz
-        arch    = {
-            0x014C: 'x86',  0x8664: 'x64',
-            0x01C0: 'ARM',  0xAA64: 'ARM64',
-        }.get(machine, f'0x{machine:04X}')
-        pe_type = {
-            0x010B: 'PE32', 0x020B: 'PE32+',
-        }.get(magic, 'unknown')
+        arch    = {0x014C:'x86', 0x8664:'x64',
+                   0x01C0:'ARM', 0xAA64:'ARM64'}.get(
+                       machine, f'0x{machine:04X}')
+        pe_type = {0x010B:'PE32', 0x020B:'PE32+'}.get(magic, 'unknown')
 
-        sec_names      = []
-        text_off       = 0
-        text_size      = 0
-        best_exec_off  = 0
-        best_exec_size = 0
+        sec_names = []
+        text_off = text_size = best_exec_off = best_exec_size = 0
 
         for i in range(nsec):
             s     = sec_off + i * 40
-            sname = raw[s:s+8].rstrip(
-                b'\x00').decode('ascii', 'replace')
+            sname = raw[s:s+8].rstrip(b'\x00').decode('ascii', 'replace')
             rsz   = struct.unpack_from('<I', raw, s+16)[0]
             roff  = struct.unpack_from('<I', raw, s+20)[0]
             chars = struct.unpack_from('<I', raw, s+36)[0]
             sec_names.append(sname)
-
-            # Primary: use .text section
             if sname == '.text':
                 text_off  = roff
                 text_size = rsz
-
-            # Fallback: track largest executable section
-            # 0x20000000 = IMAGE_SCN_CNT_CODE
             if (chars & 0x20000000) and rsz > best_exec_size:
                 best_exec_size = rsz
                 best_exec_off  = roff
 
-        # No .text found — use largest executable section
         if text_size == 0 and best_exec_size > 0:
             text_off  = best_exec_off
             text_size = best_exec_size
@@ -355,16 +302,15 @@ def analyse_text(data, sec_names, arch, pe_type,
                  filename, consensus, corpus_fg):
     t0 = time.time()
 
-    hints  = [v for k, v in SECTION_HINTS.items()
-              if k in sec_names]
+    hints  = [v for k, v in SECTION_HINTS.items() if k in sec_names]
     is_x64 = (pe_type == 'PE32+')
 
-    window, step = 256, 64
-    win_scores   = []
     c3 = consensus['p3']
     c2 = consensus['p2']
     c1 = consensus['p1']
 
+    window, step = 256, 64
+    win_scores   = []
     for off in range(0, len(data) - window, step):
         block = data[off:off+window]
         if block.count(0) / window > 0.3:
@@ -384,7 +330,6 @@ def analyse_text(data, sec_names, arch, pe_type,
         w['z']    = round((w['logp'] - mean_lp) / std_lp, 3)
         w['flag'] = bool(w['logp'] < thresh)
 
-    # fn_count MUST be before classify_binary
     fn_count = sum(
         1 for i in range(len(data) - 2)
         if data[i] == 0x55 and data[i+1] == 0x8B
@@ -393,10 +338,8 @@ def analyse_text(data, sec_names, arch, pe_type,
     fw = classify_binary(mean_lp, sec_names, fn_count)
 
     fg   = build_4grams(data)
-    sims = {
-        name: round(len(fg & cfg) / max(len(fg), 1) * 100, 1)
-        for name, cfg in corpus_fg.items()
-    }
+    sims = {name: round(len(fg & cfg) / max(len(fg), 1) * 100, 1)
+            for name, cfg in corpus_fg.items()}
     sims = dict(sorted(sims.items(), key=lambda x: -x[1]))
 
     n_anom   = sum(1 for w in win_scores if w['flag'])
@@ -405,32 +348,24 @@ def analyse_text(data, sec_names, arch, pe_type,
 
     risk, reasons = 0, []
     if mean_lp < -5.0:
-        risk += 2
-        reasons.append('Very low entropy (possible packing)')
+        risk += 2; reasons.append('Very low entropy (possible packing)')
     elif mean_lp < -3.0:
-        risk += 1
-        reasons.append('Below normal logP range')
+        risk += 1; reasons.append('Below normal logP range')
     if anom_pct > 20:
-        risk += 2
-        reasons.append(f'{anom_pct:.0f}% anomalous windows')
+        risk += 2; reasons.append(f'{anom_pct:.0f}% anomalous windows')
     elif anom_pct > 10:
-        risk += 1
-        reasons.append(f'{anom_pct:.0f}% anomalous windows')
+        risk += 1; reasons.append(f'{anom_pct:.0f}% anomalous windows')
     if max_sim < 5:
-        risk += 2
-        reasons.append('No corpus match (<5%)')
+        risk += 2; reasons.append('No corpus match (<5%)')
     elif max_sim < 15:
-        risk += 1
-        reasons.append(f'Weak corpus match ({max_sim:.0f}%)')
+        risk += 1; reasons.append(f'Weak corpus match ({max_sim:.0f}%)')
     if fn_count == 0 and not is_x64:
-        risk += 1
-        reasons.append('No function prologues detected')
+        risk += 1; reasons.append('No function prologues detected')
     if is_x64:
         risk = max(risk - 1, 0)
         reasons.append('x64 binary — x86 model applied')
 
-    risk_labels = ['LOW', 'LOW', 'MODERATE',
-                   'MODERATE', 'HIGH', 'CRITICAL']
+    risk_labels = ['LOW','LOW','MODERATE','MODERATE','HIGH','CRITICAL']
     risk_str    = risk_labels[min(risk, 5)]
 
     return {
@@ -457,24 +392,29 @@ def analyse_text(data, sec_names, arch, pe_type,
     }
 
 
-# ── Boot ──────────────────────────────────────────────────────
-print("Loading corpus...")
+# ── Boot — lazy loading ───────────────────────────────────────
+print("BinaryLens v1.3 starting...")
 db = CorpusDB('corpus')
-db.load_all()
 
 if db.consensus is None:
-    print("Rebuilding consensus...")
+    print("  No consensus found — rebuilding (this takes a moment)...")
     db.rebuild_consensus()
     db.save()
 
+# Load ONLY 4grams — ~50MB total, not 200MB+ for full models
+db.load_4grams_only()
+
+# Build similarity index from loaded 4grams
 corpus_fg = {
-    meta['name']: db.fg[sha]
-    for sha, meta in db.index.items()
-    if sha in db.fg
+    db.index[sha]['name']: db.fg[sha]
+    for sha in db.fg
+    if sha in db.index
 }
 
 n_ctx = len(db.consensus['p3']) if db.consensus else 0
-print(f"Ready: {len(db.index)} binaries, {n_ctx} contexts")
+print(f"Ready: {len(db.index)} binaries | "
+      f"{n_ctx} contexts | "
+      f"{len(corpus_fg)} similarity entries")
 
 
 # ── Routes ────────────────────────────────────────────────────
@@ -489,9 +429,8 @@ def health():
     return jsonify({
         'status':             'ok',
         'corpus_size':        len(db.index),
-        'consensus_contexts': len(db.consensus['p3'])
-                              if db.consensus else 0,
-        'version':            '1.2',
+        'consensus_contexts': n_ctx,
+        'version':            '1.3',
     })
 
 
@@ -550,12 +489,9 @@ def corpus_info():
     return jsonify({
         'total':      len(db.index),
         'frameworks': dict(fw_counts),
-        'signatures': {
-            k: {'mean': v[0], 'std': v[1]}
-            for k, v in SIGS.items()
-        },
-        'consensus_contexts': len(db.consensus['p3'])
-                              if db.consensus else 0,
+        'signatures': {k: {'mean': v[0], 'std': v[1]}
+                       for k, v in SIGS.items()},
+        'consensus_contexts': n_ctx,
     })
 
 
@@ -579,98 +515,78 @@ def corpus_add():
     if not text_size:
         return jsonify({'error': 'No executable section'}), 400
 
-    data  = raw[text_off: text_off + min(text_size, 200_000)]
-    model = build_models(data)
-    fg    = build_4grams(data)
+    data     = raw[text_off: text_off + min(text_size, 200_000)]
+    model    = build_models(data)
+    fg       = build_4grams(data)
+    fn_count = sum(1 for i in range(len(data) - 2)
+                   if data[i] == 0x55 and data[i+1] == 0x8B
+                   and data[i+2] == 0xEC)
 
     lp = 0.0
     if db.consensus:
-        c3 = db.consensus['p3']
-        c2 = db.consensus['p2']
-        c1 = db.consensus['p1']
+        c3, c2, c1 = (db.consensus['p3'],
+                      db.consensus['p2'],
+                      db.consensus['p1'])
         lps = []
         for off in range(0, len(data) - 256, 64):
             block = data[off:off+256]
-            if block.count(0) / 256 > 0.3:
-                continue
-            if max(Counter(block).values()) / 256 > 0.4:
-                continue
+            if block.count(0) / 256 > 0.3: continue
+            if max(Counter(block).values()) / 256 > 0.4: continue
             lps.append(score_logp(list(block), c3, c2, c1))
         if lps:
             lp = float(np.mean(lps))
 
-    hints    = [v for k, v in SECTION_HINTS.items()
-                if k in sec_names]
-    fn_count = sum(
-        1 for i in range(len(data) - 2)
-        if data[i] == 0x55 and data[i+1] == 0x8B
-        and data[i+2] == 0xEC
-    )
-    fw = label or classify_binary(lp, sec_names, fn_count)
+    hints = [v for k, v in SECTION_HINTS.items() if k in sec_names]
+    fw    = label or classify_binary(lp, sec_names, fn_count)
 
     meta = {
-        'name':      f.filename,
-        'path':      f.filename,
-        'size':      len(raw),
-        'text_size': len(data),
-        'arch':      arch,
-        'pe_type':   pe_type,
-        'sections':  sec_names,
-        'hints':     hints,
-        'functions': fn_count,
-        'mean_lp':   round(lp, 4),
-        'framework': fw,
-        'label':     fw,
-        'sha256':    sha,
+        'name': f.filename, 'path': f.filename,
+        'size': len(raw),   'text_size': len(data),
+        'arch': arch,       'pe_type': pe_type,
+        'sections': sec_names, 'hints': hints,
+        'functions': fn_count, 'mean_lp': round(lp, 4),
+        'framework': fw,    'label': fw, 'sha256': sha,
     }
     db.add(sha, meta, model, fg)
     corpus_fg[f.filename] = fg
+    # Rebuild consensus using lazy model loading
     db.rebuild_consensus()
     db.save()
 
-    return jsonify({
-        'sha256':      sha,
-        'added':       True,
-        'framework':   fw,
-        'corpus_size': len(db.index),
-    })
+    return jsonify({'sha256': sha, 'added': True,
+                    'framework': fw,
+                    'corpus_size': len(db.index)})
 
 
 @app.route('/compare', methods=['POST'])
 def compare():
     body = request.get_json() or {}
-    a    = body.get('sha256_a')
-    b    = body.get('sha256_b')
+    a, b = body.get('sha256_a'), body.get('sha256_b')
     if not a or not b:
-        return jsonify(
-            {'error': 'Need sha256_a and sha256_b'}), 400
+        return jsonify({'error': 'Need sha256_a and sha256_b'}), 400
     if a not in db.fg or b not in db.fg:
         return jsonify({'error': 'SHA not in corpus'}), 404
     sim = len(db.fg[a] & db.fg[b]) / max(len(db.fg[a]), 1)
     return jsonify({
-        'sha256_a':   a,
-        'name_a':     db.index[a]['name'],
-        'sha256_b':   b,
-        'name_b':     db.index[b]['name'],
+        'sha256_a': a, 'name_a': db.index[a]['name'],
+        'sha256_b': b, 'name_b': db.index[b]['name'],
         'similarity': round(sim * 100, 2),
     })
 
 
 @app.route('/signatures')
 def signatures():
-    return jsonify({
-        k: {'mean': v[0], 'std': v[1], 'label': k}
-        for k, v in SIGS.items()
-    })
+    return jsonify({k: {'mean': v[0], 'std': v[1], 'label': k}
+                    for k, v in SIGS.items()})
 
 
 if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
     print(f"\n{'='*52}")
-    print(f"  BinaryLens  v1.2")
+    print(f"  BinaryLens  v1.3")
     print(f"{'='*52}")
     print(f"  Corpus:    {len(db.index)} binaries")
     print(f"  Consensus: {n_ctx} contexts")
-    print(f"\n  Open:  http://localhost:5000")
+    print(f"  Open:      http://localhost:{port}")
     print(f"{'='*52}\n")
-    port = int(os.environ.get('PORT', 5000))
     app.run(debug=False, host='0.0.0.0', port=port)
