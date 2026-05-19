@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BinaryLens — PE Binary Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #080B0F;
+  --bg2:       #0D1117;
+  --bg3:       #141920;
+  --bg4:       #1C2333;
+  --border:    #1E2D3D;
+  --border2:   #2A3F55;
+  --text:      #C9D1D9;
+  --text2:     #8B949E;
+  --text3:     #484F58;
+  --accent:    #58A6FF;
+  --accent2:   #1F6FEB;
+  --green:     #3FB950;
+  --yellow:    #D29922;
+  --orange:    #E3652C;
+  --red:       #F85149;
+  --purple:    #BC8CFF;
+  --mono:      'IBM Plex Mono', monospace;
+  --sans:      'IBM Plex Sans', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Grid background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Layout ── */
+.shell {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: 56px 1fr;
+  min-height: 100vh;
+}
+
+/* ── Header ── */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(8,11,15,0.95);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.logo-icon {
+  width: 28px; height: 28px;
+  background: var(--accent2);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.logo span { color: var(--accent); }
+
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+}
+
+.corpus-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  color: var(--text2);
+}
+
+.dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ── Main ── */
+main {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  height: calc(100vh - 56px);
+}
+
+/* ── Left panel ── */
+.left-panel {
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panel-header {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── Drop zone ── */
+.dropzone {
+  margin: 16px;
+  border: 1px dashed var(--border2);
+  border-radius: 8px;
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: rgba(31,111,235,0.03);
+  position: relative;
+  overflow: hidden;
+}
+
+.dropzone::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(88,166,255,0.05) 0%,
+    transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.dropzone:hover, .dropzone.drag-over {
+  border-color: var(--accent2);
+  background: rgba(31,111,235,0.06);
+}
+
+.dropzone:hover::before, .dropzone.drag-over::before {
+  opacity: 1;
+}
+
+.drop-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+  opacity: 0.6;
+}
+
+.drop-title {
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.drop-sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+}
+
+.drop-btn {
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--accent2);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.drop-btn:hover { background: var(--accent); }
+
+/* ── Analysis progress ── */
+.progress-wrap {
+  margin: 0 16px 16px;
+  display: none;
+}
+
+.progress-wrap.visible { display: block; }
+
+.progress-bar-outer {
+  height: 2px;
+  background: var(--bg4);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.3s ease;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.3); }
+  100% { filter: brightness(1); }
+}
+
+.progress-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+}
+
+/* ── File info card ── */
+.file-card {
+  margin: 0 16px 16px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: none;
+}
+
+.file-card.visible { display: block; }
+
+.file-name {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 8px;
+  word-break: break-all;
+}
+
+.file-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.meta-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text3);
+}
+
+.meta-value {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text2);
+}
+
+/* ── Corpus list ── */
+.corpus-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 16px 16px;
+}
+
+.corpus-list::-webkit-scrollbar { width: 4px; }
+.corpus-list::-webkit-scrollbar-track { background: transparent; }
+.corpus-list::-webkit-scrollbar-thumb {
+  background: var(--border2);
+  border-radius: 2px;
+}
+
+.corpus-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 6px;
+  margin-bottom: 3px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: 1px solid transparent;
+}
+
+.corpus-item:hover {
+  background: var(--bg3);
+  border-color: var(--border);
+}
+
+.corpus-item-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.fw-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.corpus-item-name {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.corpus-item-sim {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+  flex-shrink: 0;
+}
+
+/* ── Right panel ── */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Empty state ── */
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--text3);
+}
+
+.empty-state.hidden { display: none; }
+
+.empty-glyph {
+  font-size: 48px;
+  opacity: 0.3;
+  font-family: var(--mono);
+}
+
+.empty-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text2);
+}
+
+.empty-sub {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-align: center;
+  line-height: 1.8;
+  max-width: 320px;
+}
+
+/* ── Results panel ── */
+.results {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: none;
+}
+
+.results.visible { display: block; }
+.results::-webkit-scrollbar { width: 4px; }
+.results::-webkit-scrollbar-thumb {
+  background: var(--border2); border-radius: 2px;
+}
+
+/* ── Verdict hero ── */
+.verdict-hero {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.verdict-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+.verdict-hero.risk-low::before { background: var(--green); }
+.verdict-hero.risk-moderate::before { background: var(--yellow); }
+.verdict-hero.risk-high::before { background: var(--orange); }
+.verdict-hero.risk-critical::before { background: var(--red); }
+
+.verdict-framework {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+  letter-spacing: -0.03em;
+}
+
+.verdict-sub {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text2);
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.verdict-sub span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.verdict-sub .dim { color: var(--text3); }
+
+.risk-badge {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  align-self: flex-start;
+}
+
+.risk-badge.LOW { background: rgba(63,185,80,0.15); color: var(--green); border: 1px solid rgba(63,185,80,0.3); }
+.risk-badge.MODERATE { background: rgba(210,153,34,0.15); color: var(--yellow); border: 1px solid rgba(210,153,34,0.3); }
+.risk-badge.HIGH { background: rgba(227,101,44,0.15); color: var(--orange); border: 1px solid rgba(227,101,44,0.3); }
+.risk-badge.CRITICAL { background: rgba(248,81,73,0.15); color: var(--red); border: 1px solid rgba(248,81,73,0.3); }
+
+/* ── Stats row ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.stat-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  margin-bottom: 6px;
+}
+
+.stat-value {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+}
+
+.stat-unit {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text3);
+}
+
+/* ── Section grid ── */
+.section-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-body { padding: 14px; }
+
+/* ── Similarity bars ── */
+.sim-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.sim-row:last-child { margin-bottom: 0; }
+
+.sim-name {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text2);
+  width: 160px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sim-bar-wrap {
+  flex: 1;
+  height: 4px;
+  background: var(--bg4);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.sim-bar {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--accent2);
+  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+
+.sim-pct {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+  width: 32px;
+  text-align: right;
+}
+
+/* ── Anomaly map ── */
+.anomaly-map-wrap {
+  margin-bottom: 20px;
+}
+
+.anomaly-canvas-wrap {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.anomaly-header {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.anomaly-legend {
+  display: flex;
+  gap: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  color: var(--text3);
+}
+
+.legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 2px;
+}
+
+canvas#anomalyMap {
+  display: block;
+  width: 100%;
+  height: 64px;
+}
+
+/* ── logP gauge ── */
+.logp-gauge {
+  padding: 14px;
+}
+
+.gauge-track {
+  position: relative;
+  height: 8px;
+  background: linear-gradient(90deg,
+    var(--green) 0%,
+    var(--yellow) 30%,
+    var(--orange) 55%,
+    var(--red) 75%,
+    #7c1a18 100%);
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.gauge-marker {
+  position: absolute;
+  top: -4px;
+  width: 16px; height: 16px;
+  background: var(--text);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  border: 2px solid var(--bg);
+  transition: left 1s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 0 8px rgba(255,255,255,0.3);
+}
+
+.gauge-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text3);
+}
+
+/* ── Hints ── */
+.hints-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 14px;
+}
+
+.hint-tag {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 10px;
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+}
+
+.hint-tag.warn {
+  background: rgba(248,81,73,0.1);
+  border-color: rgba(248,81,73,0.3);
+  color: var(--red);
+}
+
+/* ── Risk reasons ── */
+.reasons-list {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reason-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text2);
+}
+
+.reason-item::before {
+  content: '→';
+  color: var(--text3);
+  font-size: 10px;
+}
+
+/* ── Windows table ── */
+.windows-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 10px;
+}
+
+.windows-table th {
+  text-align: left;
+  padding: 6px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text3);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 9px;
+}
+
+.windows-table td {
+  padding: 5px 14px;
+  color: var(--text2);
+  border-bottom: 1px solid rgba(30,45,61,0.5);
+}
+
+.windows-table tr.anomalous td {
+  color: var(--red);
+  background: rgba(248,81,73,0.04);
+}
+
+/* ── Tabs ── */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  background: var(--bg2);
+}
+
+.tab {
+  padding: 10px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.15s;
+}
+
+.tab:hover { color: var(--text2); }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 16px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text);
+  z-index: 1000;
+  transform: translateY(60px);
+  opacity: 0;
+  transition: all 0.3s;
+  max-width: 320px;
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ── Scrollbar ── */
+.right-panel::-webkit-scrollbar { width: 4px; }
+.right-panel::-webkit-scrollbar-thumb {
+  background: var(--border2); border-radius: 2px;
+}
+
+/* ── Animations ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.fade-in-delay-1 { animation-delay: 0.05s; opacity: 0; }
+.fade-in-delay-2 { animation-delay: 0.10s; opacity: 0; }
+.fade-in-delay-3 { animation-delay: 0.15s; opacity: 0; }
+.fade-in-delay-4 { animation-delay: 0.20s; opacity: 0; }
+
+/* ── Upload hint ── */
+.x64-warn {
+  margin: 0 16px 12px;
+  padding: 8px 12px;
+  background: rgba(227,101,44,0.08);
+  border: 1px solid rgba(227,101,44,0.25);
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--orange);
+  display: none;
+}
+
+.x64-warn.visible { display: block; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- Header -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">⬡</div>
+    Binary<span>Lens</span>
+  </div>
+  <div class="header-meta">
+    <div class="corpus-badge">
+      <div class="dot"></div>
+      <span id="corpusCount">— binaries</span>
+    </div>
+    <span id="apiStatus" style="color:var(--text3)">connecting…</span>
+  </div>
+</header>
+
+<!-- Main -->
+<main>
+
+  <!-- Left panel -->
+  <div class="left-panel">
+
+    <div class="panel-header">
+      <span>Input</span>
+      <span id="analyseTime" style="color:var(--text3)"></span>
+    </div>
+
+    <!-- Drop zone -->
+    <div class="dropzone" id="dropzone">
+      <div class="drop-icon">⬡</div>
+      <div class="drop-title">Drop a PE binary</div>
+      <div class="drop-sub">.exe  ·  PE32  ·  PE32+</div>
+      <button class="drop-btn" onclick="document.getElementById('fileInput').click()">
+        Browse file
+      </button>
+      <input type="file" id="fileInput" accept=".exe,.EXE" style="display:none">
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-bar-outer">
+        <div class="progress-bar-inner" id="progressBar"></div>
+      </div>
+      <div class="progress-label" id="progressLabel">Analysing…</div>
+    </div>
+
+    <!-- x64 warning -->
+    <div class="x64-warn" id="x64warn">
+      ⚠ x64 binary detected — model trained on x86.
+      Results are indicative only.
+    </div>
+
+    <!-- File card -->
+    <div class="file-card" id="fileCard">
+      <div class="file-name" id="cardFileName">—</div>
+      <div class="file-meta-grid">
+        <div class="meta-item">
+          <div class="meta-label">Size</div>
+          <div class="meta-value" id="cardSize">—</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Arch</div>
+          <div class="meta-value" id="cardArch">—</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">.text</div>
+          <div class="meta-value" id="cardText">—</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Functions</div>
+          <div class="meta-value" id="cardFns">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Corpus -->
+    <div class="panel-header" style="margin-top:4px">
+      <span>Corpus similarity</span>
+    </div>
+    <div class="corpus-list" id="corpusList">
+      <div style="color:var(--text3);font-family:var(--mono);font-size:10px;padding:12px 10px">
+        No analysis yet
+      </div>
+    </div>
+
+  </div><!-- /left-panel -->
+
+  <!-- Right panel -->
+  <div class="right-panel">
+
+    <!-- Tabs -->
+    <div class="tabs" id="tabs" style="display:none">
+      <div class="tab active" data-tab="overview">Overview</div>
+      <div class="tab" data-tab="map">Anomaly Map</div>
+      <div class="tab" data-tab="windows">Windows</div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-glyph">⬡</div>
+      <div class="empty-title">No binary loaded</div>
+      <div class="empty-sub">
+        Drop any Windows executable into the left panel<br>
+        to begin analysis against the corpus.
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="results" id="resultsOverview">
+
+      <!-- Verdict hero -->
+      <div class="verdict-hero fade-in" id="verdictHero">
+        <div>
+          <div class="verdict-framework" id="verdictFramework">—</div>
+          <div class="verdict-sub" id="verdictSub">—</div>
+        </div>
+        <div class="risk-badge" id="riskBadge">—</div>
+      </div>
+
+      <!-- Stats row -->
+      <div class="stats-row fade-in fade-in-delay-1">
+        <div class="stat-card">
+          <div class="stat-label">Mean logP</div>
+          <div class="stat-value" id="statLogP">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Anomaly %</div>
+          <div class="stat-value" id="statAnom">—<span class="stat-unit">%</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Functions</div>
+          <div class="stat-value" id="statFns">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Elapsed</div>
+          <div class="stat-value" id="statTime">—<span class="stat-unit">s</span></div>
+        </div>
+      </div>
+
+      <!-- logP gauge -->
+      <div class="anomaly-canvas-wrap fade-in fade-in-delay-2" style="margin-bottom:20px">
+        <div class="anomaly-header">
+          <span>logP position</span>
+          <span style="color:var(--text2)" id="logpGaugeLabel">—</span>
+        </div>
+        <div class="logp-gauge">
+          <div class="gauge-track">
+            <div class="gauge-marker" id="gaugeMarker" style="left:80%"></div>
+          </div>
+          <div class="gauge-labels">
+            <span>−1.4 MSVC</span>
+            <span>−2.3 NSIS</span>
+            <span>−4.0</span>
+            <span>−6.0 packed</span>
+            <span>−8.0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section grid -->
+      <div class="section-grid fade-in fade-in-delay-3">
+
+        <!-- Similarity -->
+        <div class="card">
+          <div class="card-header">
+            <span>Corpus similarity</span>
+          </div>
+          <div class="card-body" id="simBars">—</div>
+        </div>
+
+        <!-- Risk reasons + hints -->
+        <div class="card">
+          <div class="card-header">
+            <span>Risk signals</span>
+          </div>
+          <div class="reasons-list" id="reasonsList">—</div>
+          <div class="card-header" style="border-top:1px solid var(--border)">
+            <span>Section hints</span>
+          </div>
+          <div class="hints-list" id="hintsList">—</div>
+        </div>
+
+      </div>
+
+    </div><!-- /resultsOverview -->
+
+    <!-- Anomaly map tab -->
+    <div class="results" id="resultsMap">
+      <div class="anomaly-canvas-wrap fade-in">
+        <div class="anomaly-header">
+          <span>Anomaly map — .text section</span>
+          <div class="anomaly-legend">
+            <div class="legend-item">
+              <div class="legend-dot" style="background:var(--red)"></div> anomalous
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:var(--green)"></div> typical
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:var(--accent2)"></div> normal
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:var(--text3)"></div> padding
+            </div>
+          </div>
+        </div>
+        <canvas id="anomalyMap" height="80"></canvas>
+      </div>
+      <div style="margin-top:16px;font-family:var(--mono);font-size:10px;color:var(--text3);padding:0 2px">
+        Each column = 256-byte window. Red = z &lt; −1.5 (anomalous). Green = z &gt; 1.5 (typical).
+        Width represents file offset from start of .text section.
+      </div>
+    </div>
+
+    <!-- Windows tab -->
+    <div class="results" id="resultsWindows">
+      <div class="card fade-in">
+        <div class="card-header">
+          <span>Window scores</span>
+          <span id="windowCount" style="color:var(--text2)">—</span>
+        </div>
+        <div style="overflow-x:auto;max-height:600px;overflow-y:auto">
+          <table class="windows-table" id="windowsTable">
+            <thead>
+              <tr>
+                <th>Offset</th>
+                <th>logP</th>
+                <th>Z-score</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="windowsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /right-panel -->
+
+</main><!-- /main -->
+
+</div><!-- /shell -->
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+const API = 'http://localhost:5000';
+
+// ── Framework colours ──────────────────────────────────────
+const FW_COLORS = {
+  'MSVC / CRT':         '#58A6FF',
+  'InnoSetup / MSVC':   '#3FB950',
+  'NSIS Installer':     '#BC8CFF',
+  'WiX Bootstrapper':   '#D29922',
+  'Packed / Encrypted': '#F85149',
+  'Driver / CFG binary':'#E3652C',
+  'Unknown':            '#484F58',
+};
+
+function fwColor(fw) {
+  for (const [k,v] of Object.entries(FW_COLORS))
+    if (fw.includes(k.split('/')[0].trim())) return v;
+  return '#484F58';
+}
+
+// ── State ──────────────────────────────────────────────────
+let currentResult = null;
+let activeTab     = 'overview';
+
+// ── Init ──────────────────────────────────────────────────
+async function init() {
+  try {
+    const r = await fetch(`${API}/health`);
+    const d = await r.json();
+    document.getElementById('apiStatus').textContent = 'connected';
+    document.getElementById('apiStatus').style.color = 'var(--green)';
+    document.getElementById('corpusCount').textContent =
+      `${d.corpus_size} binaries`;
+  } catch {
+    document.getElementById('apiStatus').textContent = 'API offline';
+    document.getElementById('apiStatus').style.color = 'var(--red)';
+    toast('API not reachable — start the Flask server first', 5000);
+  }
+}
+
+// ── Drag and drop ─────────────────────────────────────────
+const dz = document.getElementById('dropzone');
+dz.addEventListener('dragover', e => {
+  e.preventDefault();
+  dz.classList.add('drag-over');
+});
+dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+dz.addEventListener('drop', e => {
+  e.preventDefault();
+  dz.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) analyseFile(file);
+});
+document.getElementById('fileInput').addEventListener('change', e => {
+  if (e.target.files[0]) analyseFile(e.target.files[0]);
+});
+
+// ── Analyse ───────────────────────────────────────────────
+async function analyseFile(file) {
+  // Progress
+  setProgress(true, 'Uploading…', 10);
+  clearResults();
+
+  const fd = new FormData();
+  fd.append('file', file);
+
+  try {
+    setProgress(true, 'Parsing PE structure…', 30);
+    await sleep(120);
+    setProgress(true, 'Building Markov model…', 55);
+
+    const r = await fetch(`${API}/analyse`, {
+      method: 'POST', body: fd
+    });
+
+    setProgress(true, 'Scoring against corpus…', 80);
+    await sleep(80);
+
+    if (!r.ok) {
+      const e = await r.json();
+      toast(`Error: ${e.error}`, 4000);
+      setProgress(false);
+      return;
+    }
+
+    const data = await r.json();
+    setProgress(true, 'Rendering…', 95);
+    await sleep(100);
+    setProgress(false);
+
+    currentResult = data;
+    renderResults(data);
+    document.getElementById('analyseTime').textContent =
+      `${data.elapsed_sec}s`;
+
+  } catch (err) {
+    setProgress(false);
+    toast(`Failed: ${err.message}`, 4000);
+  }
+}
+
+function setProgress(visible, label='', pct=0) {
+  const wrap = document.getElementById('progressWrap');
+  const bar  = document.getElementById('progressBar');
+  const lbl  = document.getElementById('progressLabel');
+  wrap.classList.toggle('visible', visible);
+  bar.style.width  = pct + '%';
+  lbl.textContent  = label;
+}
+
+function clearResults() {
+  document.getElementById('emptyState').classList.add('hidden');
+  document.getElementById('resultsOverview').classList.remove('visible');
+  document.getElementById('resultsMap').classList.remove('visible');
+  document.getElementById('resultsWindows').classList.remove('visible');
+  document.getElementById('tabs').style.display = 'none';
+  document.getElementById('fileCard').classList.remove('visible');
+  document.getElementById('x64warn').classList.remove('visible');
+}
+
+// ── Render ────────────────────────────────────────────────
+function renderResults(d) {
+  // File card
+  document.getElementById('fileCard').classList.add('visible');
+  document.getElementById('cardFileName').textContent = d.filename;
+  document.getElementById('cardSize').textContent =
+    formatBytes(d.text_size);
+  document.getElementById('cardArch').textContent =
+    `${d.arch} ${d.pe_type}`;
+  document.getElementById('cardText').textContent =
+    formatBytes(d.text_size);
+  document.getElementById('cardFns').textContent = d.functions;
+
+  if (d.is_x64)
+    document.getElementById('x64warn').classList.add('visible');
+
+  // Tabs
+  document.getElementById('tabs').style.display = 'flex';
+  showTab('overview');
+
+  // Verdict hero
+  const hero = document.getElementById('verdictHero');
+  hero.className = `verdict-hero fade-in risk-${d.risk.toLowerCase()}`;
+  document.getElementById('verdictFramework').textContent = d.framework;
+
+  const sub = [
+    `<span><span class="dim">logP</span> ${d.mean_logp}</span>`,
+    `<span><span class="dim">arch</span> ${d.arch}</span>`,
+    `<span><span class="dim">nearest</span> ${d.nearest}</span>`,
+    `<span><span class="dim">functions</span> ${d.functions}</span>`,
+  ].join('');
+  document.getElementById('verdictSub').innerHTML = sub;
+
+  const rb = document.getElementById('riskBadge');
+  rb.textContent  = d.risk;
+  rb.className    = `risk-badge ${d.risk}`;
+
+  // Stats
+  document.getElementById('statLogP').textContent  = d.mean_logp;
+  document.getElementById('statAnom').innerHTML    =
+    `${d.anomaly_pct}<span class="stat-unit">%</span>`;
+  document.getElementById('statFns').textContent   = d.functions;
+  document.getElementById('statTime').innerHTML    =
+    `${d.elapsed_sec}<span class="stat-unit">s</span>`;
+
+  // logP gauge (range -1 to -8 → 0% to 100%)
+  const gaugePct = Math.min(100, Math.max(0,
+    (Math.abs(d.mean_logp) - 1) / 7 * 100));
+  document.getElementById('gaugeMarker').style.left = gaugePct + '%';
+  document.getElementById('logpGaugeLabel').textContent =
+    `${d.framework}  ·  ${d.mean_logp} bits`;
+
+  // Similarity bars
+  const simEl = document.getElementById('simBars');
+  simEl.innerHTML = '';
+  const maxSim = Math.max(...Object.values(d.similarity), 1);
+  for (const [name, pct] of Object.entries(d.similarity)) {
+    const row = document.createElement('div');
+    row.className = 'sim-row';
+    row.innerHTML = `
+      <div class="sim-name">${name.replace('.exe','')}</div>
+      <div class="sim-bar-wrap">
+        <div class="sim-bar" style="width:0%" data-pct="${pct}"></div>
+      </div>
+      <div class="sim-pct">${pct}%</div>`;
+    simEl.appendChild(row);
+  }
+  // Animate bars after render
+  requestAnimationFrame(() => {
+    simEl.querySelectorAll('.sim-bar').forEach(b => {
+      b.style.width = b.dataset.pct + '%';
+    });
+  });
+
+  // Risk reasons
+  const rl = document.getElementById('reasonsList');
+  rl.innerHTML = '';
+  if (d.risk_reasons && d.risk_reasons.length) {
+    d.risk_reasons.forEach(r => {
+      const el = document.createElement('div');
+      el.className = 'reason-item';
+      el.textContent = r;
+      rl.appendChild(el);
+    });
+  } else {
+    rl.innerHTML = '<div style="font-family:var(--mono);font-size:10px;color:var(--text3)">No risk signals</div>';
+  }
+
+  // Hints
+  const hl = document.getElementById('hintsList');
+  hl.innerHTML = '';
+  if (d.hints && d.hints.length) {
+    d.hints.forEach(h => {
+      const el = document.createElement('div');
+      const warn = ['Chrome packer','UPX packed','CFG enabled'].includes(h);
+      el.className = 'hint-tag' + (warn ? ' warn' : '');
+      el.textContent = h;
+      hl.appendChild(el);
+    });
+  } else {
+    hl.innerHTML = '<div style="font-family:var(--mono);font-size:10px;color:var(--text3)">No section hints</div>';
+  }
+
+  // Corpus list (left panel)
+  const cl = document.getElementById('corpusList');
+  cl.innerHTML = '';
+  for (const [name, pct] of Object.entries(d.similarity)) {
+    const item = document.createElement('div');
+    item.className = 'corpus-item';
+    item.innerHTML = `
+      <div class="corpus-item-left">
+        <div class="fw-dot" style="background:${fwColor(name)}"></div>
+        <div class="corpus-item-name">${name}</div>
+      </div>
+      <div class="corpus-item-sim">${pct}%</div>`;
+    cl.appendChild(item);
+  }
+
+  // Anomaly map
+  renderAnomalyMap(d.windows);
+
+  // Windows table
+  renderWindowsTable(d.windows);
+
+  document.getElementById('resultsOverview').classList.add('visible');
+}
+
+function renderAnomalyMap(windows) {
+  if (!windows || !windows.length) return;
+  const canvas = document.getElementById('anomalyMap');
+  const ctx    = canvas.getContext('2d');
+  const W      = canvas.parentElement.offsetWidth;
+  const H      = 80;
+  canvas.width  = W;
+  canvas.height = H;
+
+  const codeWins = windows.filter(w => w.z !== undefined);
+  if (!codeWins.length) return;
+
+  const maxOff = codeWins[codeWins.length-1].offset + 256;
+  const colW   = Math.max(2, W / codeWins.length);
+
+  ctx.clearRect(0, 0, W, H);
+
+  codeWins.forEach((w, i) => {
+    const x = (w.offset / maxOff) * W;
+    const z = w.z || 0;
+
+    let color;
+    if (z < -1.5)      color = `rgba(248,81,73,${Math.min(0.9, 0.4 + Math.abs(z)*0.1)})`;
+    else if (z > 1.5)  color = `rgba(63,185,80,${Math.min(0.7, 0.3 + z*0.05)})`;
+    else               color = `rgba(31,111,235,${0.2 + Math.abs(z)*0.05})`;
+
+    ctx.fillStyle = color;
+    ctx.fillRect(x, 4, Math.max(colW-1, 1), H-8);
+  });
+
+  // Axis labels
+  ctx.fillStyle = 'rgba(72,79,88,0.8)';
+  ctx.font      = '9px "IBM Plex Mono"';
+  ctx.fillText('0', 4, H-3);
+  ctx.fillText(`${formatBytes(maxOff)}`, W-40, H-3);
+}
+
+function renderWindowsTable(windows) {
+  if (!windows) return;
+  const codeWins = windows.filter(w => w.z !== undefined);
+  document.getElementById('windowCount').textContent =
+    `${codeWins.length} windows`;
+  const body = document.getElementById('windowsBody');
+  body.innerHTML = '';
+  // Show top anomalous + sample of normal
+  const sorted = [...codeWins].sort((a,b) => a.z - b.z);
+  const toShow = [
+    ...sorted.slice(0, 10),
+    ...sorted.slice(-5),
+  ].filter((v,i,a) => a.indexOf(v)===i);
+
+  toShow.forEach(w => {
+    const tr = document.createElement('tr');
+    if (w.flag) tr.className = 'anomalous';
+    tr.innerHTML = `
+      <td>0x${w.offset.toString(16).toUpperCase().padStart(6,'0')}</td>
+      <td>${w.logp}</td>
+      <td>${w.z > 0 ? '+' : ''}${w.z}</td>
+      <td>${w.flag ? '⚠ anomalous' : 'normal'}</td>`;
+    body.appendChild(tr);
+  });
+}
+
+// ── Tabs ──────────────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => showTab(t.dataset.tab));
+});
+
+function showTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.tab === tab));
+  ['overview','map','windows'].forEach(id => {
+    const el = document.getElementById(`results${cap(id)}`);
+    if (id === tab) {
+      el.classList.add('visible');
+      if (id === 'map' && currentResult)
+        setTimeout(() => renderAnomalyMap(currentResult.windows), 50);
+    } else {
+      el.classList.remove('visible');
+    }
+  });
+}
+
+// ── Helpers ───────────────────────────────────────────────
+function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function formatBytes(b) {
+  if (b > 1048576) return (b/1048576).toFixed(1)+'MB';
+  if (b > 1024)    return (b/1024).toFixed(1)+'KB';
+  return b+'B';
+}
+
+function toast(msg, dur=3000) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), dur);
+}
+
+// ── Start ─────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,1687 @@
+{
+  "482edbdd57bf6770": {
+    "name": "team viewer.exe",
+    "path": "team viewer.exe",
+    "size": 71463304,
+    "text_size": 24064,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 34,
+    "mean_lp": -2.6194,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "482edbdd57bf6770"
+  },
+  "c1cb433e23997c84": {
+    "name": "anaconda.exe",
+    "path": "anaconda.exe",
+    "size": 996695888,
+    "text_size": 29184,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 46,
+    "mean_lp": -2.6658,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "c1cb433e23997c84"
+  },
+  "0b4433794d816fc3": {
+    "name": "android studio.exe",
+    "path": "android studio.exe",
+    "size": 1222657040,
+    "text_size": 33280,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".data",
+      ".rdata",
+      ".bss",
+      ".idata",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 0,
+    "mean_lp": -2.9697,
+    "framework": "NSIS Compressed",
+    "label": "NSIS Compressed",
+    "sha256": "0b4433794d816fc3"
+  },
+  "2ee3c903aec97198": {
+    "name": "mt4.exe",
+    "path": "mt4.exe",
+    "size": 1459848,
+    "text_size": 28672,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 40,
+    "mean_lp": -2.7763,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "2ee3c903aec97198"
+  },
+  "ce1f31d70e044665": {
+    "name": "R-4.4.2-win.exe",
+    "path": "R-4.4.2-win.exe",
+    "size": 86248441,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".itext",
+      ".data",
+      ".bss",
+      ".idata",
+      ".didata",
+      ".edata",
+      ".tls",
+      ".rdata",
+      ".rsrc"
+    ],
+    "hints": [
+      "InnoSetup",
+      "TLS callbacks"
+    ],
+    "functions": 377,
+    "mean_lp": -1.7333,
+    "framework": "MSVC / CRT",
+    "label": "MSVC / CRT",
+    "sha256": "ce1f31d70e044665"
+  },
+  "adfc1f4749129dbb": {
+    "name": "vs code.exe",
+    "path": "vs code.exe",
+    "size": 103356872,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".itext",
+      ".data",
+      ".bss",
+      ".idata",
+      ".didata",
+      ".edata",
+      ".tls",
+      ".rdata",
+      ".rsrc"
+    ],
+    "hints": [
+      "InnoSetup",
+      "TLS callbacks"
+    ],
+    "functions": 377,
+    "mean_lp": -1.7498,
+    "framework": "MSVC / CRT",
+    "label": "MSVC / CRT",
+    "sha256": "adfc1f4749129dbb"
+  },
+  "83c618dcc50b63f0": {
+    "name": "Git-2.47.0.2-64-bit.exe",
+    "path": "Git-2.47.0.2-64-bit.exe",
+    "size": 68778784,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".itext",
+      ".data",
+      ".bss",
+      ".idata",
+      ".didata",
+      ".edata",
+      ".tls",
+      ".rdata",
+      ".reloc",
+      ".rsrc"
+    ],
+    "hints": [
+      "InnoSetup",
+      "TLS callbacks"
+    ],
+    "functions": 360,
+    "mean_lp": -1.7965,
+    "framework": "InnoSetup / MSVC",
+    "label": "InnoSetup / MSVC",
+    "sha256": "83c618dcc50b63f0"
+  },
+  "99650270aa32e899": {
+    "name": "sublime_text_build_4180_x64_setup.exe",
+    "path": "sublime_text_build_4180_x64_setup.exe",
+    "size": 16047376,
+    "text_size": 62464,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".itext",
+      ".data",
+      ".bss",
+      ".idata",
+      ".tls",
+      ".rdata",
+      ".rsrc"
+    ],
+    "hints": [
+      "InnoSetup",
+      "TLS callbacks"
+    ],
+    "functions": 108,
+    "mean_lp": -1.8848,
+    "framework": "InnoSetup / MSVC",
+    "label": "InnoSetup / MSVC",
+    "sha256": "99650270aa32e899"
+  },
+  "78156ad0cf0ec412": {
+    "name": "python-3.13.0-amd64.exe",
+    "path": "python-3.13.0-amd64.exe",
+    "size": 28160096,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".wixburn",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [
+      "WiX installer"
+    ],
+    "functions": 759,
+    "mean_lp": -2.2584,
+    "framework": "WiX Bootstrapper",
+    "label": "WiX Bootstrapper",
+    "sha256": "78156ad0cf0ec412"
+  },
+  "73e2c56f5fadee34": {
+    "name": "ChromeSetup.exe",
+    "path": "ChromeSetup.exe",
+    "size": 10219392,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".tls",
+      "CPADinfo",
+      "malloc_h",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [
+      "Chrome packer",
+      "TLS callbacks"
+    ],
+    "functions": 0,
+    "mean_lp": -5.5398,
+    "framework": "Packed / Encrypted",
+    "label": "Packed / Encrypted",
+    "sha256": "73e2c56f5fadee34"
+  },
+  "5cf0a8c2d326906b": {
+    "name": "Network_Driver_NNGMH_WN_18.1.0.0_A08.EXE",
+    "path": "Network_Driver_NNGMH_WN_18.1.0.0_A08.EXE",
+    "size": 26666776,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".idata",
+      ".didat",
+      ".gfids",
+      ".giats",
+      ".tls",
+      ".00cfg",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [
+      "CFG enabled",
+      "CFG IAT table",
+      "TLS callbacks"
+    ],
+    "functions": 0,
+    "mean_lp": -7.2306,
+    "framework": "Driver / CFG binary",
+    "label": "Driver / CFG binary",
+    "sha256": "5cf0a8c2d326906b"
+  },
+  "62264a5a6774c8ad": {
+    "name": "npp.8.9.5.Installer.x64.exe",
+    "path": "npp.8.9.5.Installer.x64.exe",
+    "size": 6894376,
+    "text_size": 26624,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 43,
+    "mean_lp": -1.9986,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "62264a5a6774c8ad"
+  },
+  "dfde18111e28d0d2": {
+    "name": "qbittorrent_5.2.0_x64_setup.exe",
+    "path": "qbittorrent_5.2.0_x64_setup.exe",
+    "size": 43219694,
+    "text_size": 26624,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 43,
+    "mean_lp": -1.9986,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "dfde18111e28d0d2"
+  },
+  "94d180c1fc481ccc": {
+    "name": "OBS-Studio-32.1.2-Windows-x64-Installer.exe",
+    "path": "OBS-Studio-32.1.2-Windows-x64-Installer.exe",
+    "size": 157809480,
+    "text_size": 26624,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 43,
+    "mean_lp": -1.9986,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "94d180c1fc481ccc"
+  },
+  "3c3a2f020d5e0535": {
+    "name": "Wireshark-4.6.5-x64.exe",
+    "path": "Wireshark-4.6.5-x64.exe",
+    "size": 104913040,
+    "text_size": 26624,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 43,
+    "mean_lp": -1.9986,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "3c3a2f020d5e0535"
+  },
+  "dccfa4b16aa79e27": {
+    "name": "HxDSetup.exe",
+    "path": "HxDSetup.exe",
+    "size": 3444957,
+    "text_size": 62464,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".itext",
+      ".data",
+      ".bss",
+      ".idata",
+      ".tls",
+      ".rdata",
+      ".rsrc"
+    ],
+    "hints": [
+      "InnoSetup",
+      "TLS callbacks"
+    ],
+    "functions": 108,
+    "mean_lp": -1.8927,
+    "framework": "InnoSetup / MSVC",
+    "label": "InnoSetup / MSVC",
+    "sha256": "dccfa4b16aa79e27"
+  },
+  "f450cef035a0355b": {
+    "name": "MBSetup-3.3.exe",
+    "path": "MBSetup-3.3.exe",
+    "size": 2852480,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [],
+    "functions": 364,
+    "mean_lp": -2.6375,
+    "framework": "Custom Bootstrapper",
+    "label": "Custom Bootstrapper",
+    "sha256": "f450cef035a0355b"
+  },
+  "c8ffe6ddfcd8f19e": {
+    "name": "python-3.15.0b1.exe",
+    "path": "python-3.15.0b1.exe",
+    "size": 40875992,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".wixburn",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [
+      "WiX installer"
+    ],
+    "functions": 764,
+    "mean_lp": -2.2792,
+    "framework": "WiX Bootstrapper",
+    "label": "WiX Bootstrapper",
+    "sha256": "c8ffe6ddfcd8f19e"
+  },
+  "ecc17f097ee0801f": {
+    "name": "vlc-3.0.23-win32.exe",
+    "path": "vlc-3.0.23-win32.exe",
+    "size": 44568024,
+    "text_size": 37888,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".data",
+      ".rdata",
+      ".bss",
+      ".idata",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 0,
+    "mean_lp": -2.2582,
+    "framework": "NSIS Compressed",
+    "label": "NSIS Compressed",
+    "sha256": "ecc17f097ee0801f"
+  },
+  "1e4cdcde8d9e6a81": {
+    "name": "FileZilla_3.70.5_win64_sponsored2-setup.exe",
+    "path": "FileZilla_3.70.5_win64_sponsored2-setup.exe",
+    "size": 13135000,
+    "text_size": 26624,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 43,
+    "mean_lp": -1.9986,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "1e4cdcde8d9e6a81"
+  },
+  "3fd473e00fa464f1": {
+    "name": "notepadplusplus_8.6.9.exe",
+    "path": "downloads\\notepadplusplus_8.6.9.exe",
+    "size": 6541144,
+    "text_size": 26624,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 43,
+    "mean_lp": -2.0061,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "3fd473e00fa464f1"
+  },
+  "ad12cec3a3957ff7": {
+    "name": "7zip_2407.exe",
+    "path": "downloads\\7zip_2407.exe",
+    "size": 1620576,
+    "text_size": 26112,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".rsrc"
+    ],
+    "hints": [],
+    "functions": 55,
+    "mean_lp": -2.7702,
+    "framework": "WiX Bootstrapper",
+    "label": "WiX Bootstrapper",
+    "sha256": "ad12cec3a3957ff7"
+  },
+  "03fa495f824001fa": {
+    "name": "cpu_z_2.11.exe",
+    "path": "downloads\\cpu_z_2.11.exe",
+    "size": 3592744,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".itext",
+      ".data",
+      ".bss",
+      ".idata",
+      ".didata",
+      ".edata",
+      ".tls",
+      ".rdata",
+      ".rsrc"
+    ],
+    "hints": [
+      "InnoSetup",
+      "TLS callbacks"
+    ],
+    "functions": 360,
+    "mean_lp": -1.7965,
+    "framework": "MSVC / CRT",
+    "label": "MSVC / CRT",
+    "sha256": "03fa495f824001fa"
+  },
+  "c11eb303330b9638": {
+    "name": "obs_30.2.2.exe",
+    "path": "downloads\\obs_30.2.2.exe",
+    "size": 139815840,
+    "text_size": 26624,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 43,
+    "mean_lp": -1.9986,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "c11eb303330b9638"
+  },
+  "fa3b9064e1f1732a": {
+    "name": "handbrake_1.8.1.exe",
+    "path": "downloads\\handbrake_1.8.1.exe",
+    "size": 23782144,
+    "text_size": 26112,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 42,
+    "mean_lp": -2.1264,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "fa3b9064e1f1732a"
+  },
+  "d85105ef806f15ad": {
+    "name": "sharex_16.0.1.exe",
+    "path": "downloads\\sharex_16.0.1.exe",
+    "size": 40484505,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".itext",
+      ".data",
+      ".bss",
+      ".idata",
+      ".didata",
+      ".edata",
+      ".tls",
+      ".rdata",
+      ".rsrc"
+    ],
+    "hints": [
+      "InnoSetup",
+      "TLS callbacks"
+    ],
+    "functions": 377,
+    "mean_lp": -1.7333,
+    "framework": "MSVC / CRT",
+    "label": "MSVC / CRT",
+    "sha256": "d85105ef806f15ad"
+  },
+  "b2afe799584c9135": {
+    "name": "everything_1.4.1.1024.exe",
+    "path": "downloads\\everything_1.4.1.1024.exe",
+    "size": 1885848,
+    "text_size": 26624,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 45,
+    "mean_lp": -2.1947,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "b2afe799584c9135"
+  },
+  "25527923debc0651": {
+    "name": "git_2.47.1.exe",
+    "path": "downloads\\git_2.47.1.exe",
+    "size": 69109976,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".itext",
+      ".data",
+      ".bss",
+      ".idata",
+      ".didata",
+      ".edata",
+      ".tls",
+      ".rdata",
+      ".reloc",
+      ".rsrc"
+    ],
+    "hints": [
+      "InnoSetup",
+      "TLS callbacks"
+    ],
+    "functions": 360,
+    "mean_lp": -1.7965,
+    "framework": "InnoSetup / MSVC",
+    "label": "InnoSetup / MSVC",
+    "sha256": "25527923debc0651"
+  },
+  "055e960261fc3172": {
+    "name": "winmerge_2.16.44.exe",
+    "path": "downloads\\winmerge_2.16.44.exe",
+    "size": 10004768,
+    "text_size": 62464,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".itext",
+      ".data",
+      ".bss",
+      ".idata",
+      ".tls",
+      ".rdata",
+      ".rsrc"
+    ],
+    "hints": [
+      "InnoSetup",
+      "TLS callbacks"
+    ],
+    "functions": 108,
+    "mean_lp": -1.8848,
+    "framework": "InnoSetup / MSVC",
+    "label": "InnoSetup / MSVC",
+    "sha256": "055e960261fc3172"
+  },
+  "a381547821f58901": {
+    "name": "python_3.12.8_x86.exe",
+    "path": "downloads\\python_3.12.8_x86.exe",
+    "size": 25749104,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".wixburn",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [
+      "WiX installer"
+    ],
+    "functions": 764,
+    "mean_lp": -2.2792,
+    "framework": "WiX Bootstrapper",
+    "label": "WiX Bootstrapper",
+    "sha256": "a381547821f58901"
+  },
+  "af19e5e2f03e715a": {
+    "name": "python_3.11.9_x86.exe",
+    "path": "downloads\\python_3.11.9_x86.exe",
+    "size": 24933192,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".wixburn",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [
+      "WiX installer"
+    ],
+    "functions": 759,
+    "mean_lp": -2.2584,
+    "framework": "WiX Bootstrapper",
+    "label": "WiX Bootstrapper",
+    "sha256": "af19e5e2f03e715a"
+  },
+  "61f42ec369123e8e": {
+    "name": "opera_115.0.exe",
+    "path": "downloads\\opera_115.0.exe",
+    "size": 113014168,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".tls",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [
+      "TLS callbacks"
+    ],
+    "functions": 660,
+    "mean_lp": -2.4776,
+    "framework": "Custom Bootstrapper",
+    "label": "Custom Bootstrapper",
+    "sha256": "61f42ec369123e8e"
+  },
+  "e5b4a8d6938ad742": {
+    "name": "brave_1.73.97.exe",
+    "path": "downloads\\brave_1.73.97.exe",
+    "size": 1277216,
+    "text_size": 105984,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [],
+    "functions": 468,
+    "mean_lp": -2.3575,
+    "framework": "Custom Bootstrapper",
+    "label": "Custom Bootstrapper",
+    "sha256": "e5b4a8d6938ad742"
+  },
+  "82abda13ca234b9c": {
+    "name": "audacity_3.7.3.exe",
+    "path": "downloads\\audacity_3.7.3.exe",
+    "size": 16959640,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".itext",
+      ".data",
+      ".bss",
+      ".idata",
+      ".didata",
+      ".edata",
+      ".tls",
+      ".rdata",
+      ".reloc",
+      ".rsrc"
+    ],
+    "hints": [
+      "InnoSetup",
+      "TLS callbacks"
+    ],
+    "functions": 358,
+    "mean_lp": -1.8759,
+    "framework": "InnoSetup / MSVC",
+    "label": "InnoSetup / MSVC",
+    "sha256": "82abda13ca234b9c"
+  },
+  "4bd03202b6633f96": {
+    "name": "vlc_3.0.21_fixed.exe",
+    "path": "downloads\\vlc_3.0.21_fixed.exe",
+    "size": 43123136,
+    "text_size": 37888,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".data",
+      ".rdata",
+      ".bss",
+      ".idata",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 0,
+    "mean_lp": -2.2589,
+    "framework": "NSIS Compressed",
+    "label": "NSIS Compressed",
+    "sha256": "4bd03202b6633f96"
+  },
+  "e3515980c9012eed": {
+    "name": "gimp_2.10.38_fixed.exe",
+    "path": "downloads\\gimp_2.10.38_fixed.exe",
+    "size": 344465496,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".itext",
+      ".data",
+      ".bss",
+      ".idata",
+      ".didata",
+      ".edata",
+      ".tls",
+      ".rdata",
+      ".rsrc"
+    ],
+    "hints": [
+      "InnoSetup",
+      "TLS callbacks"
+    ],
+    "functions": 377,
+    "mean_lp": -1.7333,
+    "framework": "MSVC / CRT",
+    "label": "MSVC / CRT",
+    "sha256": "e3515980c9012eed"
+  },
+  "3b4a1f5a99f7040f": {
+    "name": "foobar2000_2.1.5.exe",
+    "path": "downloads\\foobar2000_2.1.5.exe",
+    "size": 5948636,
+    "text_size": 26624,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 43,
+    "mean_lp": -1.9986,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "3b4a1f5a99f7040f"
+  },
+  "e4b14e3e677d8a12": {
+    "name": "mpc_hc_2.3.0.exe",
+    "path": "downloads\\mpc_hc_2.3.0.exe",
+    "size": 22023234,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".itext",
+      ".data",
+      ".bss",
+      ".idata",
+      ".didata",
+      ".edata",
+      ".tls",
+      ".rdata",
+      ".rsrc"
+    ],
+    "hints": [
+      "InnoSetup",
+      "TLS callbacks"
+    ],
+    "functions": 377,
+    "mean_lp": -1.7333,
+    "framework": "MSVC / CRT",
+    "label": "MSVC / CRT",
+    "sha256": "e4b14e3e677d8a12"
+  },
+  "d74892601a50514b": {
+    "name": "beyond_compare_5.exe",
+    "path": "downloads\\beyond_compare_5.exe",
+    "size": 28248760,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".itext",
+      ".data",
+      ".bss",
+      ".idata",
+      ".didata",
+      ".edata",
+      ".tls",
+      ".rdata",
+      ".reloc",
+      ".rsrc"
+    ],
+    "hints": [
+      "InnoSetup",
+      "TLS callbacks"
+    ],
+    "functions": 360,
+    "mean_lp": -1.8135,
+    "framework": "InnoSetup / MSVC",
+    "label": "InnoSetup / MSVC",
+    "sha256": "d74892601a50514b"
+  },
+  "7eb91fc484ab27a8": {
+    "name": "zoom_latest.exe",
+    "path": "downloads\\zoom_latest.exe",
+    "size": 37189560,
+    "text_size": 163840,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [],
+    "functions": 733,
+    "mean_lp": -2.4994,
+    "framework": "Custom Bootstrapper",
+    "label": "Custom Bootstrapper",
+    "sha256": "7eb91fc484ab27a8"
+  },
+  "d9fc9e75e174f309": {
+    "name": "winrar_7.10.exe",
+    "path": "downloads\\winrar_7.10.exe",
+    "size": 3782736,
+    "text_size": 200000,
+    "arch": "x64",
+    "pe_type": "PE32+",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".pdata",
+      ".didat",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [],
+    "functions": 0,
+    "mean_lp": -6.1533,
+    "framework": "MSVC / CRT x64",
+    "label": "MSVC / CRT x64",
+    "sha256": "d9fc9e75e174f309"
+  },
+  "0ea59a9d8cdf65c4": {
+    "name": "ccleaner_6.29.exe",
+    "path": "downloads\\ccleaner_6.29.exe",
+    "size": 77196304,
+    "text_size": 26624,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 45,
+    "mean_lp": -2.4996,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "0ea59a9d8cdf65c4"
+  },
+  "8404b6cfad9d998b": {
+    "name": "procexp64.exe",
+    "path": "downloads\\procexp64.exe",
+    "size": 2408248,
+    "text_size": 200000,
+    "arch": "x64",
+    "pe_type": "PE32+",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".pdata",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [],
+    "functions": 0,
+    "mean_lp": -6.1881,
+    "framework": "MSVC / CRT x64",
+    "label": "MSVC / CRT x64",
+    "sha256": "8404b6cfad9d998b"
+  },
+  "4679d24063c4deb0": {
+    "name": "autoruns64.exe",
+    "path": "downloads\\autoruns64.exe",
+    "size": 1996128,
+    "text_size": 200000,
+    "arch": "x64",
+    "pe_type": "PE32+",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".pdata",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [],
+    "functions": 0,
+    "mean_lp": -6.246,
+    "framework": "MSVC / CRT x64",
+    "label": "MSVC / CRT x64",
+    "sha256": "4679d24063c4deb0"
+  },
+  "0cbcb7ec4a042622": {
+    "name": "tcpview64.exe",
+    "path": "downloads\\tcpview64.exe",
+    "size": 1087368,
+    "text_size": 200000,
+    "arch": "x64",
+    "pe_type": "PE32+",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".pdata",
+      "_RDATA",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [],
+    "functions": 0,
+    "mean_lp": -6.0983,
+    "framework": "MSVC / CRT x64",
+    "label": "MSVC / CRT x64",
+    "sha256": "0cbcb7ec4a042622"
+  },
+  "5f7e5098c1128a06": {
+    "name": "procmon64.exe",
+    "path": "downloads\\procmon64.exe",
+    "size": 2145592,
+    "text_size": 200000,
+    "arch": "x64",
+    "pe_type": "PE32+",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".pdata",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [],
+    "functions": 0,
+    "mean_lp": -6.1639,
+    "framework": "MSVC / CRT x64",
+    "label": "MSVC / CRT x64",
+    "sha256": "5f7e5098c1128a06"
+  },
+  "503c8589a9628790": {
+    "name": "dbgview64.exe",
+    "path": "downloads2\\dbgview64.exe",
+    "size": 762720,
+    "text_size": 200000,
+    "arch": "x64",
+    "pe_type": "PE32+",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".pdata",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [],
+    "functions": 0,
+    "mean_lp": -6.1127,
+    "framework": "MSVC / CRT x64",
+    "label": "MSVC / CRT x64",
+    "sha256": "503c8589a9628790"
+  },
+  "29d23bc492e48a5a": {
+    "name": "listdlls64.exe",
+    "path": "downloads2\\listdlls64.exe",
+    "size": 220336,
+    "text_size": 114688,
+    "arch": "x64",
+    "pe_type": "PE32+",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".pdata",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [],
+    "functions": 0,
+    "mean_lp": -6.1085,
+    "framework": "MSVC / CRT x64",
+    "label": "MSVC / CRT x64",
+    "sha256": "29d23bc492e48a5a"
+  },
+  "d3247f03dcd7b933": {
+    "name": "pslist64.exe",
+    "path": "downloads2\\pslist64.exe",
+    "size": 267136,
+    "text_size": 154112,
+    "arch": "x64",
+    "pe_type": "PE32+",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".pdata",
+      "_RDATA",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [],
+    "functions": 0,
+    "mean_lp": -6.0779,
+    "framework": "MSVC / CRT x64",
+    "label": "MSVC / CRT x64",
+    "sha256": "d3247f03dcd7b933"
+  },
+  "05dbb43499bcff44": {
+    "name": "strings64.exe",
+    "path": "downloads2\\strings64.exe",
+    "size": 478088,
+    "text_size": 200000,
+    "arch": "x64",
+    "pe_type": "PE32+",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".pdata",
+      "_RDATA",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [],
+    "functions": 0,
+    "mean_lp": -6.0676,
+    "framework": "MSVC / CRT x64",
+    "label": "MSVC / CRT x64",
+    "sha256": "05dbb43499bcff44"
+  },
+  "0797b9f6e0281d8f": {
+    "name": "whois64.exe",
+    "path": "downloads2\\whois64.exe",
+    "size": 523632,
+    "text_size": 200000,
+    "arch": "x64",
+    "pe_type": "PE32+",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".pdata",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [],
+    "functions": 0,
+    "mean_lp": -6.1433,
+    "framework": "MSVC / CRT x64",
+    "label": "MSVC / CRT x64",
+    "sha256": "0797b9f6e0281d8f"
+  },
+  "e2a2a818ab71c388": {
+    "name": "winobj64.exe",
+    "path": "downloads2\\winobj64.exe",
+    "size": 1781632,
+    "text_size": 200000,
+    "arch": "x64",
+    "pe_type": "PE32+",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".pdata",
+      ".detourc",
+      ".detourd",
+      "_RDATA",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [],
+    "functions": 0,
+    "mean_lp": -6.0024,
+    "framework": "MSVC / CRT x64",
+    "label": "MSVC / CRT x64",
+    "sha256": "e2a2a818ab71c388"
+  },
+  "f916c910116a497d": {
+    "name": "diskext64.exe",
+    "path": "downloads2\\diskext64.exe",
+    "size": 442744,
+    "text_size": 200000,
+    "arch": "x64",
+    "pe_type": "PE32+",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".pdata",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [],
+    "functions": 0,
+    "mean_lp": -6.1272,
+    "framework": "MSVC / CRT x64",
+    "label": "MSVC / CRT x64",
+    "sha256": "f916c910116a497d"
+  },
+  "84d4b083a25d9365": {
+    "name": "du64.exe",
+    "path": "downloads2\\du64.exe",
+    "size": 465784,
+    "text_size": 200000,
+    "arch": "x64",
+    "pe_type": "PE32+",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".pdata",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [],
+    "functions": 0,
+    "mean_lp": -6.114,
+    "framework": "MSVC / CRT x64",
+    "label": "MSVC / CRT x64",
+    "sha256": "84d4b083a25d9365"
+  },
+  "3e7b1fcd9e8c0cca": {
+    "name": "pendmoves64.exe",
+    "path": "downloads2\\pendmoves64.exe",
+    "size": 441208,
+    "text_size": 200000,
+    "arch": "x64",
+    "pe_type": "PE32+",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".pdata",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [],
+    "functions": 0,
+    "mean_lp": -6.1194,
+    "framework": "MSVC / CRT x64",
+    "label": "MSVC / CRT x64",
+    "sha256": "3e7b1fcd9e8c0cca"
+  },
+  "7ba47558c99e18c2": {
+    "name": "pskill64.exe",
+    "path": "downloads2\\pskill64.exe",
+    "size": 476592,
+    "text_size": 163840,
+    "arch": "x64",
+    "pe_type": "PE32+",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".pdata",
+      "_RDATA",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [],
+    "functions": 0,
+    "mean_lp": -6.0792,
+    "framework": "MSVC / CRT x64",
+    "label": "MSVC / CRT x64",
+    "sha256": "7ba47558c99e18c2"
+  },
+  "f363935897bf32ad": {
+    "name": "python_3.9.13.exe",
+    "path": "downloads2\\python_3.9.13.exe",
+    "size": 28096840,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".wixburn",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [
+      "WiX installer"
+    ],
+    "functions": 741,
+    "mean_lp": -3.0952,
+    "framework": "WiX Bootstrapper",
+    "label": "WiX Bootstrapper",
+    "sha256": "f363935897bf32ad"
+  },
+  "769bb7c74ad1df6d": {
+    "name": "python_3.7.9.exe",
+    "path": "downloads2\\python_3.7.9.exe",
+    "size": 25875560,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".wixburn",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [
+      "WiX installer"
+    ],
+    "functions": 741,
+    "mean_lp": -3.0952,
+    "framework": "WiX Bootstrapper",
+    "label": "WiX Bootstrapper",
+    "sha256": "769bb7c74ad1df6d"
+  },
+  "bd115a575e86e61c": {
+    "name": "python_3.10.11.exe",
+    "path": "downloads2\\python_3.10.11.exe",
+    "size": 27865760,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".wixburn",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [
+      "WiX installer"
+    ],
+    "functions": 741,
+    "mean_lp": -3.0952,
+    "framework": "WiX Bootstrapper",
+    "label": "WiX Bootstrapper",
+    "sha256": "bd115a575e86e61c"
+  },
+  "276309b644c03912": {
+    "name": "telegram_setup.exe",
+    "path": "downloads2\\telegram_setup.exe",
+    "size": 46562120,
+    "text_size": 200000,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".itext",
+      ".data",
+      ".bss",
+      ".idata",
+      ".didata",
+      ".edata",
+      ".tls",
+      ".rdata",
+      ".reloc",
+      ".rsrc"
+    ],
+    "hints": [
+      "InnoSetup",
+      "TLS callbacks"
+    ],
+    "functions": 358,
+    "mean_lp": -1.8514,
+    "framework": "InnoSetup / MSVC",
+    "label": "InnoSetup / MSVC",
+    "sha256": "276309b644c03912"
+  },
+  "3f406657124cc2c4": {
+    "name": "signal_setup.exe",
+    "path": "downloads2\\signal_setup.exe",
+    "size": 272972104,
+    "text_size": 26624,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 44,
+    "mean_lp": -3.2395,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "3f406657124cc2c4"
+  },
+  "959a56dea9135933": {
+    "name": "mkvtoolnix.exe",
+    "path": "downloads2\\mkvtoolnix.exe",
+    "size": 26411520,
+    "text_size": 36864,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".data",
+      ".rdata",
+      ".bss",
+      ".idata",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 0,
+    "mean_lp": -3.8124,
+    "framework": "NSIS Compressed",
+    "label": "NSIS Compressed",
+    "sha256": "959a56dea9135933"
+  },
+  "9742689a50e96ddc": {
+    "name": "vlc_3.0.21_64.exe",
+    "path": "downloads2\\vlc_3.0.21_64.exe",
+    "size": 44943296,
+    "text_size": 37888,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".data",
+      ".rdata",
+      ".bss",
+      ".idata",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 0,
+    "mean_lp": -2.3652,
+    "framework": "NSIS Compressed",
+    "label": "NSIS Compressed",
+    "sha256": "9742689a50e96ddc"
+  },
+  "5de8b54409e62ec2": {
+    "name": "notepadplusplus_32.exe",
+    "path": "downloads2\\notepadplusplus_32.exe",
+    "size": 6390144,
+    "text_size": 26624,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 43,
+    "mean_lp": -2.0061,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "5de8b54409e62ec2"
+  },
+  "5bef72e6c479025a": {
+    "name": "notion_setup.exe",
+    "path": "downloads2\\notion_setup.exe",
+    "size": 79662296,
+    "text_size": 26624,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 44,
+    "mean_lp": -3.2395,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "5bef72e6c479025a"
+  },
+  "ece202fec415428c": {
+    "name": "ccleaner_latest.exe",
+    "path": "downloads2\\ccleaner_latest.exe",
+    "size": 88407408,
+    "text_size": 26624,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 45,
+    "mean_lp": -2.5199,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "ece202fec415428c"
+  },
+  "9a266e4fcc51599d": {
+    "name": "winrar_latest.exe",
+    "path": "downloads2\\winrar_latest.exe",
+    "size": 3789296,
+    "text_size": 200000,
+    "arch": "x64",
+    "pe_type": "PE32+",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".pdata",
+      ".didat",
+      ".rsrc",
+      ".reloc"
+    ],
+    "hints": [],
+    "functions": 0,
+    "mean_lp": -6.0982,
+    "framework": "MSVC / CRT x64",
+    "label": "MSVC / CRT x64",
+    "sha256": "9a266e4fcc51599d"
+  },
+  "d67c561674d8a723": {
+    "name": "krita_5.2.3.exe",
+    "path": "downloads\\krita_5.2.3.exe",
+    "size": 152252575,
+    "text_size": 26112,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 44,
+    "mean_lp": -2.5927,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "d67c561674d8a723"
+  },
+  "44524f1abd1ac0f5": {
+    "name": "wireshark_4.4.3.exe",
+    "path": "downloads\\wireshark_4.4.3.exe",
+    "size": 87290872,
+    "text_size": 26624,
+    "arch": "x86",
+    "pe_type": "PE32",
+    "sections": [
+      ".text",
+      ".rdata",
+      ".data",
+      ".ndata",
+      ".rsrc"
+    ],
+    "hints": [
+      "NSIS installer"
+    ],
+    "functions": 43,
+    "mean_lp": -1.9688,
+    "framework": "NSIS Installer",
+    "label": "NSIS Installer",
+    "sha256": "44524f1abd1ac0f5"
+  }
+}
